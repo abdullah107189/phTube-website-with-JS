@@ -84,4 +84,12 @@ const displayVideos = (videos) => {
 loadCategories()
 loadVideos()
 
-
+const inputFiled = document.getElementById('searchFiled')
+inputFiled.addEventListener('keyup', (e) => {
+    const searchImplement = async () => {
+        const res = await fetch(`https://openapi.programming-hero.com/api/phero-tube/videos?title=${e.target.value}`)
+        const data = await res.json()
+        displayVideos(data.videos)
+    }
+    searchImplement()
+})
