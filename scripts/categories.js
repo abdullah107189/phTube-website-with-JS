@@ -15,9 +15,10 @@ const displayCategorys = (datas) => {
     const allCategories = document.getElementById('allCategories')
     datas.forEach((item) => {
         const button = document.createElement('button')
-        button.classList.add('btn')
-        button.onclick = () => handleBtnData(item.category_id)
+        button.id = `category-${item.category_id}`
+        button.classList.add('btn', 'categoryBtn')
         button.innerText = item.category
+        button.onclick = () => handleBtnData(item.category_id)
         allCategories.append(button)
     });
 }
@@ -26,6 +27,13 @@ const handleBtnData = async (id) => {
     const res = await fetch(`https://openapi.programming-hero.com/api/phero-tube/category/${id}`)
     const data = await res.json()
     displayVideos(data.category)
+
+    const categoryBtn = document.getElementsByClassName('categoryBtn')
+    for (const btn of categoryBtn) {
+        btn.classList.remove('btn-error', 'text-white')
+    }
+    const activeBtn = document.getElementById(`category-${id}`)
+    activeBtn.classList.add('btn-error', 'text-white')
 }
 
 // load all vedios
@@ -45,11 +53,10 @@ const displayVideos = (videos) => {
         </div>
         `
     }
-    else{
+    else {
         videoSection.classList.add('grid')
     }
     videos.forEach(video => {
-        console.log(video)
         const card = document.createElement('div')
         card.classList.add('card', 'card-compact', 'shadow-xl')
         card.innerHTML = `
