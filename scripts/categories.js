@@ -42,6 +42,24 @@ const loadVideos = async () => {
     const data = await res.json()
     displayVideos(data.videos)
 }
+// let video ={
+//     "category_id": "1003",
+//     "video_id": "aaaf",
+//     "thumbnail": "https://i.ibb.co/5LRQkKF/stick-and-stones.jpg",
+//     "title": "Sticks & Stones",
+//     "authors": [
+//         {
+//             "profile_picture": "https://i.ibb.co/rdTZrCM/dev.jpg",
+//             "profile_name": "Dave Chappelle",
+//             "verified": true
+//         }
+//     ],
+//     "others": {
+//         "views": "113K",
+//         "posted_date": ""
+//     },
+//     "description": "Dave Chappelle's 'Sticks & Stones' has garnered 113K views and remains a controversial yet highly engaging piece of stand-up comedy. Known for his fearless approach, Dave dives into a wide range of topics, delivering his unique perspective with wit and sharp humor. As a verified artist, Dave's comedy is raw, honest, and unapologetically funny."
+// }
 const displayVideos = (videos) => {
     const videoSection = document.getElementById('videoSection')
     videoSection.innerHTML = ''
@@ -73,10 +91,9 @@ const displayVideos = (videos) => {
                 <h2 class="card-title font-bold">${video.title}</h2>
                 <p>${video.authors[0].profile_name} <span>${video.authors[0].verified === true ? '<i class="fa-solid text-blue-500 fa-certificate"></i>' : ''}</span></p>
                 <p>${video.others.views} views</p>
-                
             </div>
         </div>
-        
+        <button onclick="handleModal('${video?.video_id}')" class="btn btn-sm">Details</button>
         `
         videoSection.append(card)
     });
@@ -93,3 +110,24 @@ inputFiled.addEventListener('keyup', (e) => {
     }
     searchImplement()
 })
+
+const handleModal = async (id) => {
+    const url = `https://openapi.programming-hero.com/api/phero-tube/video/${id}`
+    const modalContent = document.getElementById('modal-content')
+    try {
+        const res = await fetch(url)
+        const data = await res.json()
+        const modalData = data.video;
+        modalContent.innerHTML =`
+         <div class="w-full h-[300px]">
+                <img class="w-full h-full object-cover rounded-lg" src=${modalData.thumbnail} alt="">
+            </div>
+            <h1 class="text-2xl font-bold">Title</h1>
+            <p>${modalData.description}</p>        
+        `
+    }
+    catch {
+        console.error(error)
+    }
+     document.getElementById('modalOpen').showModal();
+}
